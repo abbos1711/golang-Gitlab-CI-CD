@@ -1,48 +1,36 @@
-version: '3'
+stages:
+  - build
+  - deploy
 
-services:
-  postgres:
-    container_name: postgres_clinic
-    image: postgres:15.3
-    restart: always
-    environment:
-       POSTGRES_DB: clinic
-       POSTGRES_USER: otajonov
-       POSTGRES_PASSWORD: quvonchbek
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
-    networks:
-      - clinic_network
-    ports:
-      - "5434:5432"  # Map container's port 5432 to host's port 5434
+build-image:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  only:
+    - main
 
-  clinic:
-    build: .
-    ports:
-      - "8081:8081"
-    environment:
-       POSTGRES_HOST: postgres
-       POSTGRES_PORT: 5432
-       POSTGRES_USER: otajonov
-       POSTGRES_PASSWORD: quvonchbek
-       POSTGRES_DB: clinic
+deploy:
+  stage: deploy
+  before_script:
+   - chmod 400 $SSH_KEY
+  script:
+   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
+        docker stop $CONTAINER_NAME || true &&
+        docker rm $CONTAINER_NAME || true &&
+        docker image rm $IMAGE_NAME || true &&
+        docker run --name $CONTAINER_NAME  
+        -e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_DATABASE=$POSTGRES_DATABASE -e POSTGRES_USER=$POSTGRES_USER 
+        -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
+        -d -p 8000:8000  $IMAGE_NAME:$IMAGE_TAG"
+  only:
+    - main
 
-       HTTP_PORT: 8081
-       SIGN_KEY: clinic
-       LOG_LEVEL: debug
-       ENVIRONMENT: developer
-    volumes:
-      - media:/app/media
-    networks:
-      - clinic_network
-    depends_on:
-      - postgres
-    restart: always
-
-networks:
-  clinic_network:  # Create a custom Docker network
-    driver: bridge  # You can change the driver as needed
-
-volumes:
-  media:
-  postgres-data:

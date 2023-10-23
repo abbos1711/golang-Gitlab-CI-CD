@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/axrorbek/go/src/gitlab.com/test_with_tizim'
+go run cmd/main.go
+make: Leaving directory '/home/axrorbek/go/src/gitlab.com/test_with_tizim'
+ 

@@ -1,4 +1,4 @@
-# test_with_tizim
+# tizim-back
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/neo_anderson1/test_with_tizim.git
+git remote add origin https://gitlab.com/tizim-astrolab/tizim-back.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/neo_anderson1/test_with_tizim/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/tizim-astrolab/tizim-back/-/settings/integrations)
 
 ## Collaborate with your team
 

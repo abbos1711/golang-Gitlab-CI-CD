@@ -1,0 +1,430 @@
+definitions:
+  models.AllWorkers:
+    properties:
+      female:
+        type: integer
+      male:
+        type: integer
+      total_amount:
+        type: integer
+      workers:
+        items:
+          $ref: '#/definitions/models.WorkerResp'
+        type: array
+    type: object
+  models.AllWorkersFilter:
+    properties:
+      workers:
+        items:
+          $ref: '#/definitions/models.WorkerResp'
+        type: array
+    type: object
+  models.AttendancePortion:
+    properties:
+      portion:
+        type: number
+    type: object
+  models.DailyReq:
+    properties:
+      id:
+        type: string
+      time:
+        type: string
+    type: object
+  models.DailyRes:
+    properties:
+      comeTime:
+        type: string
+      date:
+        type: string
+      leaveTime:
+        type: string
+      status:
+        type: boolean
+      workDuration:
+        type: string
+      workerId:
+        type: string
+    type: object
+  models.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.LoginRes:
+    properties:
+      token:
+        type: string
+    type: object
+  models.ResponseError:
+    properties:
+      error: {}
+    type: object
+  models.ResponseOk:
+    properties:
+      Message:
+        type: string
+    type: object
+  models.WorkerCreate:
+    properties:
+      birthday:
+        type: string
+      come_time:
+        type: string
+      contact:
+        type: string
+      department:
+        type: string
+      gender:
+        type: string
+      img:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      surname:
+        type: string
+    type: object
+  models.WorkerResp:
+    properties:
+      birthday:
+        type: string
+      come_time:
+        type: string
+      contact:
+        type: string
+      created_at:
+        type: string
+      department:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      img:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      surname:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.WorkerUpdate:
+    properties:
+      birthday:
+        type: string
+      come_time:
+        type: string
+      contact:
+        type: string
+      department:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      img:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      surname:
+        type: string
+    type: object
+  models.WorkersByMonth:
+    properties:
+      id:
+        type: string
+      img:
+        type: string
+      middle_come_time:
+        type: string
+      middle_leave_time:
+        type: string
+      middle_work_hours_month:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+      work_day_month:
+        type: string
+    type: object
+  models.WorkersByMonthResp:
+    properties:
+      workers_resp:
+        items:
+          $ref: '#/definitions/models.WorkersByMonth'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: Created by Otajonov Quvonchbek
+paths:
+  /v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: This api can login
+      parameters:
+      - description: Login
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.LoginRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - User
+  /v1/daily:
+    post:
+      consumes:
+      - application/json
+      description: Create attendence
+      parameters:
+      - description: request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.DailyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DailyRes'
+      summary: Create attendance
+      tags:
+      - Daily
+  /v1/daily/portion:
+    get:
+      consumes:
+      - application/json
+      description: Get attendance portion
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AttendancePortion'
+      summary: Get attendance portion
+      tags:
+      - Daily
+  /v1/file-upload:
+    post:
+      consumes:
+      - application/json
+      description: File upload
+      parameters:
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: File upload
+      tags:
+      - file-upload
+  /v1/get-workers-by-month/{date}:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workers by date
+      parameters:
+      - description: date
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WorkersByMonthResp'
+      summary: Get all workers by date
+      tags:
+      - Worker-History
+  /v1/worker:
+    post:
+      consumes:
+      - application/json
+      description: Create worker
+      parameters:
+      - description: worker
+        in: body
+        name: worker
+        required: true
+        schema:
+          $ref: '#/definitions/models.WorkerCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WorkerResp'
+      summary: Create worker
+      tags:
+      - Worker
+  /v1/worker/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: This finction deletes worker by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseOk'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Delete worker
+      tags:
+      - Worker
+    get:
+      consumes:
+      - application/json
+      description: This finction gets worker by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WorkerResp'
+      summary: Get worker
+      tags:
+      - Worker
+  /v1/worker/update:
+    post:
+      consumes:
+      - application/json
+      description: This finction updates worker by id
+      parameters:
+      - description: worker
+        in: body
+        name: worker
+        required: true
+        schema:
+          $ref: '#/definitions/models.WorkerUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseOk'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: Update worker
+      tags:
+      - Worker
+  /v1/workers:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workerers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AllWorkers'
+      summary: Get all workers
+      tags:
+      - Worker
+  /v1/workers/{gender}:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workerers
+      parameters:
+      - description: gender
+        in: path
+        name: gender
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AllWorkersFilter'
+      summary: Get workers by gender
+      tags:
+      - Worker
+  /v1/workers/at-work:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workerers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AllWorkersFilter'
+      summary: Get workers at work
+      tags:
+      - Worker
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,1 @@
+{"buildTargets":["local-up","migrate-down","migrate-up","migrate_file","migratedown","migrateup","proto-gen","pull-sub-module","run","swag-gen","update-sub-module"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

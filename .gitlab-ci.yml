@@ -21,7 +21,7 @@ deploy:
   stage: deploy
   before_script:
    #- chmod 400 $SSH_KEY
-   - chmod chmod ug+rx $SSH_KEY
+   - chmod ug+rx $SSH_KEY
   script:
    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 

@@ -20,8 +20,8 @@ build-image:
 deploy:
   stage: deploy
   before_script:
-   - chmod og= $SSH_KEY
-   #- chmod ug+rx $SSH_KEY
+   #- chmod og= $SSH_KEY
+   - chmod ug+rx $SSH_KEY
   script:
    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 

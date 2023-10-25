@@ -22,8 +22,8 @@ deploy:
   before_script:
    #- chmod ug+rx $SSH_KEY
    #- chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
-   #- chmod 600 $SSH_KEY 
-   - chmod 400 $SSH_KEY 
+   - chmod 600 $SSH_KEY 
+   #- chmod 400 $SSH_KEY 
   script:
    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 

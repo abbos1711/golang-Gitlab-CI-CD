@@ -23,7 +23,7 @@ deploy:
    #- chmod ug+rx $SSH_KEY
    #- chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
    #- chmod 600 $SSH_KEY 
-   - chmod 400 $SSH_KEY 
+   #- chmod 400 $SSH_KEY 
    - chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
    
   script:

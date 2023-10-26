@@ -29,10 +29,10 @@ deploy:
    - eval $(ssh-agent -s)
    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
    - mkdir -p ~/.ssh
-   - chmod 600 ~/.ssh
+   - chmod 700 ~/.ssh
    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
    - chmod 644 ~/.ssh/known_hosts
-
+   - chmod 600 ~/.ssh/authorized_keys
    
   script:
    #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "

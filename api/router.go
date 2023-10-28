@@ -72,15 +72,18 @@ func New(option RoutetOptions) *gin.Engine {
 	// Workers
 	api.POST("/worker", handlerV1.CreateWorker)
 	api.DELETE("/worker/:id", handlerV1.DeleteWorker)
-	api.POST("/worker/update", handlerV1.UpdateWorker)
+	api.PUT("/worker/update", handlerV1.UpdateWorker)
 	api.GET("/workers", handlerV1.GetAllWorkers)
 	api.GET("/worker/:id", handlerV1.GetWorker)
 	api.GET("/workers/at-work", handlerV1.GetWorkersAtWork)
 	api.GET("/workers/:gender", handlerV1.GetWorkersByGender)
+	api.GET("/workers-top", handlerV1.GetTopWorkers)
+	
 
 	// Workers-history
-	api.GET("get-workers-by-month/:date", handlerV1.GetAllWorkersByMonth)
-	//api.GET("get-workers-by-month/:date", handlerV1.GetAllWorkersByMonth)
+	api.GET("get-workers-by-month/:date", handlerV1.GetWorkersByMonth)
+	api.GET("get-workers-by-day/:date", handlerV1.GetWorkersByDay)
+	api.GET("get-workers-by-two-date/:date1/:date2", handlerV1.GetWorkersByTwoDate)
 
 	// File - upload
 	api.POST("/file-upload", handlerV1.UploadFile)
@@ -89,8 +92,6 @@ func New(option RoutetOptions) *gin.Engine {
 	api.POST("/daily", handlerV1.CreateAttendance)
 	api.GET("/daily/portion", handlerV1.GetAttendancePortion)
 
-
-	
 	url := ginSwagger.URL("swagger/doc.json")
 	api.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 

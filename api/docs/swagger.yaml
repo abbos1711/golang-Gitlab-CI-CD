@@ -28,8 +28,6 @@ definitions:
     properties:
       id:
         type: string
-      time:
-        type: string
     type: object
   models.DailyRes:
     properties:
@@ -37,6 +35,8 @@ definitions:
         type: string
       date:
         type: string
+      lateMinute:
+        type: number
       leaveTime:
         type: string
       status:
@@ -69,6 +69,36 @@ definitions:
     properties:
       Message:
         type: string
+    type: object
+  models.TopTen:
+    properties:
+      comeTime:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      position:
+        type: string
+      surname:
+        type: string
+      wdepartment:
+        type: string
+    type: object
+  models.TopWorkers:
+    properties:
+      topBad:
+        items:
+          $ref: '#/definitions/models.TopTen'
+        type: array
+      topBest:
+        items:
+          $ref: '#/definitions/models.TopTen'
+        type: array
     type: object
   models.WorkerCreate:
     properties:
@@ -141,6 +171,28 @@ definitions:
       surname:
         type: string
     type: object
+  models.WorkersByDay:
+    properties:
+      come_time:
+        type: string
+      id:
+        type: string
+      img:
+        type: string
+      leave_time:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+    type: object
+  models.WorkersByDayResp:
+    properties:
+      workers_resp:
+        items:
+          $ref: '#/definitions/models.WorkersByDay'
+        type: array
+    type: object
   models.WorkersByMonth:
     properties:
       id:
@@ -161,6 +213,13 @@ definitions:
         type: string
     type: object
   models.WorkersByMonthResp:
+    properties:
+      workers_resp:
+        items:
+          $ref: '#/definitions/models.WorkersByMonth'
+        type: array
+    type: object
+  models.WorkersByTwoDateResp:
     properties:
       workers_resp:
         items:
@@ -257,6 +316,27 @@ paths:
       summary: File upload
       tags:
       - file-upload
+  /v1/get-workers-by-day/{date}:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workers by day
+      parameters:
+      - description: date
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WorkersByDayResp'
+      summary: Get all workers by day
+      tags:
+      - Worker-History
   /v1/get-workers-by-month/{date}:
     get:
       consumes:
@@ -278,6 +358,32 @@ paths:
       summary: Get all workers by date
       tags:
       - Worker-History
+  /v1/get-workers-by-two-date/{date}:
+    get:
+      consumes:
+      - application/json
+      description: This function gets all workers by two date
+      parameters:
+      - description: date1
+        in: path
+        name: date1
+        required: true
+        type: string
+      - description: date2
+        in: path
+        name: date2
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WorkersByTwoDateResp'
+      summary: Get all workers by two date
+      tags:
+      - Worker-History
   /v1/worker:
     post:
       consumes:
@@ -297,6 +403,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.WorkerResp'
+      security:
+      - ApiKeyAuth: []
       summary: Create worker
       tags:
       - Worker
@@ -322,6 +430,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
       summary: Delete worker
       tags:
       - Worker
@@ -346,7 +456,7 @@ paths:
       tags:
       - Worker
   /v1/worker/update:
-    post:
+    put:
       consumes:
       - application/json
       description: This finction updates worker by id
@@ -368,6 +478,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ResponseError'
+      security:
+      - ApiKeyAuth: []
       summary: Update worker
       tags:
       - Worker
@@ -384,6 +496,23 @@ paths:
           schema:
             $ref: '#/definitions/models.AllWorkers'
       summary: Get all workers
+      tags:
+      - Worker
+  /v1/workers-top:
+    get:
+      consumes:
+      - application/json
+      description: This function gets top workerers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TopWorkers'
+            type: array
+      summary: Get top workers
       tags:
       - Worker
   /v1/workers/{gender}:

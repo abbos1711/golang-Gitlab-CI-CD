@@ -76,31 +76,99 @@ func (r *workerHistoryRepo) GetWorkersByMonth(date string) (*models.WorkersByMon
 	return &response, nil
 }
 
-func (r *workerHistoryRepo) GetWorkersBy(date string) (*models.WorkersByMonth, error) {
-	response := models.WorkersByMonth{}
-	// var in, out, hours time.Time
-	// var workDay int
-	// query := ``
+func (r *workerHistoryRepo) GetWorkersByTwoDate(date1, date2 string) (*models.WorkersByTwoDateResp, error) {
+	response := models.WorkersByTwoDateResp{}
+	query := `
+	SELECT
+		workers.id,
+		workers.img_url,
+		workers.name,
+		workers.surname,
+	FROM
+		workers
+	LEFT JOIN
+		daily ON workers.id = daily.worker_id
+	WHERE
+		daily.w_date >= $1 AND daily.w_date <= $2
+	GROUP BY
+		workers.id, workers.img_url, workers.name, workers.surname
+	`
 
-	// rows, err := r.db.Query(context.Background(), query, date, date)
-	// if err != nil {
-	// 	return &models.WorkersByDateResp{}, err
-	// }
+	rows, err := r.db.Query(context.Background(), query, date1, date2)
+	if err != nil {
+		return &models.WorkersByTwoDateResp{}, err
+	}
+	defer rows.Close()
 
-	// defer rows.Close()
+	for rows.Next() {
+		worker := models.WorkersByMonth{}
 
-	// for rows.Next() {
-	// 	worker := models.WorkersResp{}
+		err := rows.Scan(
+			&worker.Id,
+			&worker.Img_url,
+			&worker.Name,
+			&worker.Surname,
+		)
+		if err != nil {
+			log.Println("Error while scanning rows: ", err)
+			return nil, err
+		}
 
-	// 	err := rows.Scan(
-	// 	)
-	// 	if err != nil {
-	// 		log.Println("Error while scanning rows: ", err)
-	// 		return nil, err
-	// 	}
+		response.WorkersResp = append(response.WorkersResp, worker)
+	}
 
-	// 	response.WorkersResp = append(response.WorkersResp, worker)
-	// }
+	return &response, nil
+}
+
+func (r *workerHistoryRepo) GetWorkersByDay(date string) (*models.WorkersByDayResp, error) {
+	response := models.WorkersByDayResp{}
+	query := `
+	SELECT
+		workers.id,
+		workers.img_url,
+		workers.name,
+		workers.surname
+	FROM
+		workers
+	LEFT JOIN (
+		SELECT
+			come_time,
+			leave_time
+		FROM
+			daily
+		WHERE
+			w_date = $1
+	) AS daily ON workers.id = daily.worker_id
+	GROUP BY
+		workers.id, workers.img_url, workers.name, workers.surname
+	ORDER BY
+		workers.id
+	`
+
+	rows, err := r.db.Query(context.Background(), query, date)
+	if err != nil {
+		return &models.WorkersByDayResp{}, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		worker := models.WorkersByDay{}
+
+		err := rows.Scan(
+			&worker.Id,
+			&worker.Img_url,
+			&worker.Name,
+			&worker.Surname,
+			&worker.ComeTime,
+			&worker.LeaveTime,
+		)
+		if err != nil {
+			log.Println("Error while scanning rows: ", err)
+			return nil, err
+		}
+
+		response.WorkersResp = append(response.WorkersResp, worker)
+	}
 
 	return &response, nil
 }

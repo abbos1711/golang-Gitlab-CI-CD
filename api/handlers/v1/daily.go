@@ -40,7 +40,6 @@ func (h *handlerV1) CreateAttendance(c *gin.Context) {
 	}
 	request := models.DailyReq{	
 		Id: body.Id,
-		Time: body.Time,
 	}
 
 	response, err := h.Storage.Daily().CreateAttendance(&request)

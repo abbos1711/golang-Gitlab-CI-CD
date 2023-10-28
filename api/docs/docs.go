@@ -150,6 +150,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/get-workers-by-day/{date}": {
+            "get": {
+                "description": "This function gets all workers by day",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Worker-History"
+                ],
+                "summary": "Get all workers by day",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "date",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.WorkersByDayResp"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/get-workers-by-month/{date}": {
             "get": {
                 "description": "This function gets all workers by date",
@@ -182,8 +214,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/get-workers-by-two-date/{date}": {
+            "get": {
+                "description": "This function gets all workers by two date",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Worker-History"
+                ],
+                "summary": "Get all workers by two date",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "date1",
+                        "name": "date1",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "date2",
+                        "name": "date2",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.WorkersByTwoDateResp"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/worker": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Create worker",
                 "consumes": [
                     "application/json"
@@ -217,7 +293,12 @@ const docTemplate = `{
             }
         },
         "/v1/worker/update": {
-            "post": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This finction updates worker by id",
                 "consumes": [
                     "application/json"
@@ -288,6 +369,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This finction deletes worker by id",
                 "consumes": [
                     "application/json"
@@ -342,6 +428,32 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.AllWorkers"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/workers-top": {
+            "get": {
+                "description": "This function gets top workerers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Worker"
+                ],
+                "summary": "Get top workers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TopWorkers"
+                            }
                         }
                     }
                 }
@@ -448,9 +560,6 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "string"
-                },
-                "time": {
-                    "type": "string"
                 }
             }
         },
@@ -462,6 +571,9 @@ const docTemplate = `{
                 },
                 "date": {
                     "type": "string"
+                },
+                "lateMinute": {
+                    "type": "number"
                 },
                 "leaveTime": {
                     "type": "string"
@@ -511,6 +623,52 @@ const docTemplate = `{
             "properties": {
                 "Message": {
                     "type": "string"
+                }
+            }
+        },
+        "models.TopTen": {
+            "type": "object",
+            "properties": {
+                "comeTime": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "wdepartment": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TopWorkers": {
+            "type": "object",
+            "properties": {
+                "topBad": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TopTen"
+                    }
+                },
+                "topBest": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TopTen"
+                    }
                 }
             }
         },
@@ -622,6 +780,40 @@ const docTemplate = `{
                 }
             }
         },
+        "models.WorkersByDay": {
+            "type": "object",
+            "properties": {
+                "come_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "img": {
+                    "type": "string"
+                },
+                "leave_time": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.WorkersByDayResp": {
+            "type": "object",
+            "properties": {
+                "workers_resp": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.WorkersByDay"
+                    }
+                }
+            }
+        },
         "models.WorkersByMonth": {
             "type": "object",
             "properties": {
@@ -652,6 +844,17 @@ const docTemplate = `{
             }
         },
         "models.WorkersByMonthResp": {
+            "type": "object",
+            "properties": {
+                "workers_resp": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.WorkersByMonth"
+                    }
+                }
+            }
+        },
+        "models.WorkersByTwoDateResp": {
             "type": "object",
             "properties": {
                 "workers_resp": {

@@ -2,7 +2,6 @@ package models
 
 type DailyReq struct {
 	Id   string `json:"id"`
-	Time string `json:"time"`
 }
 
 type DailyRes struct {
@@ -12,6 +11,7 @@ type DailyRes struct {
 	LeaveTime    string `json:"leaveTime"`
 	WorkDuration string `json:"workDuration"`
 	Status       bool   `json:"status"`
+	LateMinute   float32    `json:"lateMinute"`
 }
 
 type AttendancePortion struct {

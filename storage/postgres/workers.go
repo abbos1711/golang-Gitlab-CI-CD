@@ -424,6 +424,7 @@ func (r *workerRepo) GetWorkersAtWork() (*models.AllWorkersFilter, error) {
 		WHERE
 			workers.deleted_at IS NULL
 			AND daily.w_date = CURRENT_DATE
+			AND daily.status = true
 		GROUP BY 
 			workers.id
 	`
@@ -477,4 +478,52 @@ func (r *workerRepo) GetWorkersAtWork() (*models.AllWorkersFilter, error) {
 	}
 
 	return &workers, nil
+}
+
+func (r *workerRepo) GetWorkersNotAtWork() (*models.AllWorkersFilter, error) {
+	var res models.AllWorkersFilter
+
+	all, err := r.GetAllWorkers()
+	if err != nil {
+		log.Println("Error while getting all workers: ", err)
+		return nil, err
+	}
+
+	at_work, err := r.GetWorkersAtWork()
+	if err != nil {
+		log.Println("Error while getting workers at work: ", err)
+		return nil, err
+	}
+
+	for i := range all.Workers {
+		var check bool
+
+		for n := range at_work.Workers {
+
+			if all.Workers[i].Id == at_work.Workers[n].Id {
+				check = true
+				break
+			}
+		}
+
+		if !check {
+			res.Workers = append(res.Workers, all.Workers[i])
+		}
+	}
+
+	return &res, nil
+}
+
+func (r *workerRepo) GetTopWorkers() (*models.TopWorkers, error) {
+	var res models.TopWorkers
+
+	// query := `
+	// 	SELECT DISTINCT w_id, SUM(late_min) as late_sum
+	// 	FROM daily
+	// 	GROUP BY w_id
+	// 	ORDER BY status_sum DESC
+	// 	LIMIT 10
+	// `
+
+	return &res, nil
 }

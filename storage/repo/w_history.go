@@ -6,5 +6,7 @@ import (
 
 type WorkerHistoryStorageI interface {
 	GetWorkersByMonth(date string) (*models.WorkersByMonthResp, error)
-	//GetWorkersByMonth(date string) (*models.WorkersByMonth, error)
-}//
+	GetWorkersByTwoDate(date1, date2 string) (*models.WorkersByTwoDateResp, error)
+	GetWorkersByDay(date string) (*models.WorkersByDayResp, error)
+
+}

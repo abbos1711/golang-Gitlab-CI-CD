@@ -15,7 +15,7 @@ import (
 // @Summary      Create worker
 // @Description  Create worker
 // @Tags         Worker
-// Security 	 ApiKeyAuth
+// @Security 	 ApiKeyAuth
 // @Accept       json
 // @Produce      json
 // @Param        worker   body 	  models.WorkerCreate true  "worker"
@@ -65,7 +65,7 @@ func (h *handlerV1) CreateWorker(c *gin.Context) {
 // @Summary 	Delete worker
 // @Description This finction deletes worker by id
 // @Tags 		Worker
-// Security 	ApiKeyAuth
+// @Security 	ApiKeyAuth
 // @Accept 		json
 // @Produce 	json
 // @Param 		id path string true "id"
@@ -92,13 +92,13 @@ func (h *handlerV1) DeleteWorker(c *gin.Context) {
 // @Summary 	Update worker
 // @Description This finction updates worker by id
 // @Tags		Worker
-// Security 	ApiKeyAuth
+// @Security 	ApiKeyAuth
 // @Accept 		json
 // @Produce 	json
 // @Param 		worker body models.WorkerUpdate true "worker"
 // @Success 	200 {object} models.ResponseOk
 // @Failure 	500 {object} models.ResponseError
-// @Router 		/v1/worker/update [post]
+// @Router 		/v1/worker/update [put]
 func (h *handlerV1) UpdateWorker(c *gin.Context) {
 
 	var (
@@ -234,3 +234,27 @@ func (h *handlerV1) GetWorkersAtWork(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+// Get Top Workers 
+// @Summary      Get top workers 
+// @Description  This function gets top workerers
+// @Tags         Worker
+// Security 	 ApiKeyAuth
+// @Accept       json
+// @Produce      json
+// @Success      200  	{object}  []models.TopWorkers
+// @Router 		/v1/workers-top [get]
+func (h *handlerV1) GetTopWorkers(c *gin.Context) {
+
+	response, err := h.Storage.Worker().GetTopWorkers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		h.log.Error("failed to get best workers", logger.Error(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+

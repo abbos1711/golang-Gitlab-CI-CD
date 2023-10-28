@@ -12,4 +12,5 @@ type WorkerStorageI interface {
 	GetWorker(id string) (*models.WorkerResp, error)
 	GetWorkersByGender (gender string)(*models.AllWorkersFilter, error)
 	GetWorkersAtWork ()(*models.AllWorkersFilter, error)
+	GetTopWorkers()(*models.TopWorkers, error)
 }

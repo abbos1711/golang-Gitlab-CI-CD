@@ -60,7 +60,7 @@ func (r *dailyRepo) CreateAttendance(req *models.DailyReq) (*models.DailyRes, er
 				TRUE,
 				$2
 			FROM workers
-			WHERE workers.id = '09e3dec8-cc8d-4e8e-8344-ae802c59ec2c'
+			WHERE workers.id = $1
 			RETURNING 
 				w_date,
 				worker_id,

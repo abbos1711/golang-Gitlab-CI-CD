@@ -20,10 +20,11 @@ build-image:
 deploy:
   stage: deploy
   before_script:
-    - chmod 400 $SSH_KEY
-    - chmod 400 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
+    - chmod 600 $SSH_KEY
+    - chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
     - ssh-keygen -p -m PEM -f /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
-    #- rm -rf /path/to/directory
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
 
   script:
     - apt-get update && apt-get install -y openssh-client

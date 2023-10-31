@@ -1,0 +1,38 @@
+stages:
+  - build
+  - deploy
+
+build-image:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  before_script:
+   - chmod 400 $SSH_KEY
+  script:
+   - apt-get update && apt-get install -y sshpass
+   - sshpass -p "$SERVER_PASSWORD" ssh root@SERVER_IP "
+   #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
+   - sshpass -p "$SERVER_PASSWORD" ssh root@SERVER_IP "
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
+        docker stop $CONTAINER_NAME || true &&
+        docker rm $CONTAINER_NAME || true &&
+        docker image rm $IMAGE_NAME || true &&
+        docker run --name $CONTAINER_NAME  
+        -e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_DATABASE=$POSTGRES_DATABASE -e POSTGRES_USER=$POSTGRES_USER 
+        -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
+        -d -p 4000:4000  $IMAGE_NAME:$IMAGE_TAG"
+  only:
+    - main

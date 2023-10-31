@@ -27,8 +27,8 @@ deploy:
    - apt-get update && apt-get install -y sshpass
    #- sshpass -p "$SERVER_PASSWORD" ssh root@SERVER_IP "
    #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
-   - sshpass -p $SERVER_PASSWORD ssh root@$SERVER_IP "  
-        docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
+   - sshpass -p $SERVER_PASSWORD $SSH root@$SERVER_IP "  
+        sudo docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&  
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&
         docker image rm $IMAGE_NAME || true &&
@@ -37,7 +37,6 @@ deploy:
         -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
         -d -p 4000:4000  $IMAGE_NAME:$IMAGE_TAG "
   after_script:
-    #- # cleanup commands for file-based variables
     - rm -f /path/to/file      
   only:
     - main

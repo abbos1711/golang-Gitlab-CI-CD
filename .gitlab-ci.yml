@@ -21,6 +21,8 @@ deploy:
   stage: deploy
   before_script:
    - chmod 400 $SSH_KEY
+   - rm -rf /path/to/directory
+
   script:
    - apt-get update && apt-get install -y sshpass
    #- sshpass -p "$SERVER_PASSWORD" ssh root@SERVER_IP "
@@ -34,5 +36,8 @@ deploy:
         -e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_DATABASE=$POSTGRES_DATABASE -e POSTGRES_USER=$POSTGRES_USER 
         -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
         -d -p 4000:4000  $IMAGE_NAME:$IMAGE_TAG "
+  after_script:
+    #- # cleanup commands for file-based variables
+    - rm -f /path/to/file      
   only:
     - main

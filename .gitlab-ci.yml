@@ -44,7 +44,8 @@ deploy:
     - eval $(ssh-agent -s)
     - ssh-add $SSH_KEY
     #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
-    - sshpass -p $SERVER_PASSWORD ssh root@$SERVER_IP "
+    #- sshpass -p $SERVER_PASSWORD ssh root@$SERVER_IP "
+    - ssh -i $SSH_KEY root@$SERVER_IP
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&

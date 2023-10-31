@@ -23,7 +23,7 @@ deploy:
     - chmod 400 $SSH_KEY
     - chmod 400 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
     - ssh-keygen -p -m PEM -f /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
-    - rm -rf /path/to/directory
+    #- rm -rf /path/to/directory
 
   script:
     - apt-get update && apt-get install -y openssh-client

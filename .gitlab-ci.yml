@@ -27,7 +27,7 @@ deploy:
    - apt-get update && apt-get install -y sshpass
    #- sshpass -p "$SERVER_PASSWORD" ssh root@SERVER_IP "
    #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
-   - sshpass -p $SERVER_PASSWORD ssh root@$SERVER_IP "  
+   - sshpass -p $SERVER_PASSWORD $SSH_KEY root@$SERVER_IP "  
         sudo docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&  
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&

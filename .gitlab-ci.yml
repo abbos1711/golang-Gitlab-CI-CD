@@ -20,10 +20,10 @@ build-image:
 deploy:
   stage: deploy
   before_script:
-   - chmod 400 $SSH_KEY
+   - chmod 600 $SSH_KEY
    - chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
   script:
-   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
+   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&

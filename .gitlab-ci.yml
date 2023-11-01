@@ -20,45 +20,16 @@ build-image:
 deploy:
   stage: deploy
   before_script:
-    #- chmod 600 $SSH_KEY
-    #- chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
-    #- ssh-keygen -p -m PEM -f /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
-    #- echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-    #- chmod 644 ~/.ssh/known_hosts
-
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client wget gnupg -y )'
-    - wget -qO- https://get.docker.com/gpg | apt-key add -
-    - eval $(ssh-agent -s)
-    #- echo "$SSH_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - touch ~/.ssh/config
-    - touch ~/.ssh/known_hosts
-    - chmod -R 600 ~/.ssh
-    - chmod 400 $SSH_KEY
-    - chmod 600 $SSH_KEY
-    #- ssh-keyscan <ip> >> ~/.ssh/known_hosts
-    - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
+   - chmod 400 $SSH_KEY
   script:
-    - apt-get update && apt-get install -y openssh-client
-    - apt-get update && apt-get install -y sshpass
-
-    - eval $(ssh-agent -s)
-    #- ssh-add $SSH_KEY
-    #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
-    #- ssh -i $SSH_KEY root@$SERVER_IP
-    - sshpass -p $SERVER_PASSWORD ssh root@$SERVER_IP "
-        docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@$SERVER_IP "
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&
         docker image rm $IMAGE_NAME || true &&
-        docker run --name $CONTAINER_NAME
-        -e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_DATABASE=$POSTGRES_DATABASE -e POSTGRES_USER=$POSTGRES_USER
-        -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-        -d -p 4000:4000 $IMAGE_NAME:$IMAGE_TAG "
-        
-  after_script:
-    - rm -f /path/to/file      
-    
+        docker run --name $CONTAINER_NAME  
+        -e POSTGRES_HOST=$POSTGRES_HOST -e POSTGRES_DATABASE=$POSTGRES_DATABASE -e POSTGRES_USER=$POSTGRES_USER 
+        -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
+        -d -p 8000:8000  $IMAGE_NAME:$IMAGE_TAG"
   only:
     - main

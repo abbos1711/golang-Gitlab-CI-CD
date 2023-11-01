@@ -20,8 +20,13 @@ build-image:
 deploy:
   stage: deploy
   before_script:
-   - chmod 600 $SSH_KEY
-   - chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
+   - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 600 ~/.ssh
+   - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
+   - chmod 700 ~/.ssh/known_hosts
   script:
    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 

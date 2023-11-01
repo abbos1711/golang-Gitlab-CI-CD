@@ -24,7 +24,7 @@ deploy:
     #- chmod 600 /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
     #- ssh-keygen -p -m PEM -f /builds/neo_anderson1/test_with_tizim.tmp/SSH_KEY
     #- echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+    #- chmod 644 ~/.ssh/known_hosts
 
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client wget gnupg -y )'
     - wget -qO- https://get.docker.com/gpg | apt-key add -

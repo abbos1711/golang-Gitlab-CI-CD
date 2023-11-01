@@ -58,7 +58,7 @@ deploy:
         -d -p 4000:4000 $IMAGE_NAME:$IMAGE_TAG "
         
   after_script:
-    #- rm -f /path/to/file      
+    - rm -f /path/to/file      
     
   only:
     - main

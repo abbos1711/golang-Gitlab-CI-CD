@@ -28,7 +28,7 @@ deploy:
    - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
    - chmod 700 ~/.ssh/known_hosts
   script:
-   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY  root@$SERVER_IP "
+   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
         docker stop $CONTAINER_NAME || true &&
         docker rm $CONTAINER_NAME || true &&

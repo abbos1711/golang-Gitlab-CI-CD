@@ -30,7 +30,7 @@ deploy:
   script:
    #- ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$SERVER_IP "
   #- ssh $SSH_USER@$SERVER_IP "hostname && echo 'Welcome!!!' > welcome3.txt"
-  #- ssh -o StrictHostKeyChecking=no -i $SSH_USER@$SERVER_IP  "
+  #- ssh -o StrictHostKeyChecking=no -i $SSH_USER@$SERVER_IP "
     - ssh $SSH_USER@$SERVER_IP "hostname && echo 'Welcome!!!' > welcome2.txt" "
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
         docker stop $CONTAINER_NAME || true &&

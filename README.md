@@ -1,4 +1,4 @@
-Variables:
+Variables in .ci-gitlab.yml:
 
 $REGISTRY_USER: Represents the username for Docker registry authentication.
 

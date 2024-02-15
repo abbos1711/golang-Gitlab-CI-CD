@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-webapp
+  labels:
+    run: react-webapp
+spec:
+  ports:
+  - port: 8888
+    protocol: TCP
+  selector:
+    app: react-webapp
+  type: NodePort
+
+
+# it will run IP:[running port]/v1/swagger/index.html

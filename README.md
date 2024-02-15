@@ -25,3 +25,15 @@ $POSTGRES_USER: Represents the username for PostgreSQL authentication.
 $POSTGRES_PASSWORD: Represents the password for PostgreSQL authentication.
 
 
+
+
+
+
+
+
+
+K8S:
+
+kubectl apply -f Deployment.yaml
+
+kubectl apply -f Service.yaml
